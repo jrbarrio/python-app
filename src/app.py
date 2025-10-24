@@ -6,7 +6,7 @@ import socket
 app = Flask(__name__)
 
 
-@app.route('/api/v1/info')
+@app.route('/api/v1/details')
 
 def info():
     return jsonify({
