@@ -36,23 +36,23 @@ jobs:
     runs-on: arc-runner-set
     steps:
 
-      # - uses: actions/setup-python@v6
-      #   with:
-      #     python-version: '3.13' 
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13' 
 
-      # - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      # - name: Modify values file
-      #   shell: bash
-      #   run: |
-      #     echo ${{needs.ci.outputs.commit_id}}
-      #     pip install yq
-      #     yq -Yi '.image.tag = "${{needs.ci.outputs.commit_id}}"' charts/python-app/values.yaml
+      - name: Modify values file
+        shell: bash
+        run: |
+          echo ${{needs.ci.outputs.commit_id}}
+          pip install yq
+          yq -Yi '.image.tag = "${{needs.ci.outputs.commit_id}}"' charts/python-app/values.yaml
 
-      # - name: Commit changes
-      #   uses: EndBug/add-and-commit@v9
-      #   with:
-      #     message: 'Updates values.yaml with commit ${{needs.ci.outputs.commit_id}}'
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: 'Updates values.yaml with commit ${{needs.ci.outputs.commit_id}}'
 
       - name: Install argocd
         shell: bash
@@ -64,7 +64,7 @@ jobs:
       - name: Argocd app sync
         shell: bash
         run: |
-          /usr/local/bin/argocd login argocd-server.argocd \
+          argocd login argocd-server.argocd \
             --insecure  \
             --grpc-web \
             --username admin \
