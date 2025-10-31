@@ -4,13 +4,13 @@ metadata:
   name: python-app
 spec:
   rules:
-  - host: "python-app.test.com"
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: python-app
-            port:
-              number: 8080
+    - host: "python-app.test.com"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: python-app
+                port:
+                  number: 8080
