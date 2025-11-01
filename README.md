@@ -120,9 +120,48 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 ```
 - Browse to ArgoCD:
   - https://argocd.test.com
+- Link ArgoCD to Github repo:
+  - https://argocd.test.com/settings/repos
+- Create application in ArgoCD:
+  - https://argocd.test.com/applications
 
 # Create a pipeline that automatizes Docker image building and publication (Github Actions)
-
-
+- Allow all actions and reusable workflows on the Github repo:
+  - https://github.com/jrbarrio/python-app/settings/actions
+- Create Github Actions secret to store Docker Hub username and password:
+  - https://github.com/jrbarrio/python-app/settings/secrets/actions
+- Create Gitbub Actions CI job on a new workflow executing the following actions:
+  - Shorten commit id
+  - Login to Docker Hub (secret required)
+  - Build and push Docker image
 
 # Extend the pipeline to automatize the app deployment after successful building (Github Actions)
+- Create a Github Personal Access Token (PAT):
+  - https://github.com/settings/tokens
+- Install Actions Runner Controller for Github Actions in Kubernetes:
+  - https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/quickstart
+```
+NAMESPACE="arc-systems"
+helm install arc \
+    --namespace "${NAMESPACE}" \
+    --create-namespace \
+    oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller
+
+INSTALLATION_NAME="arc-runner-set"
+NAMESPACE="arc-runners"
+GITHUB_CONFIG_URL="https://https://github.com/jrbarrio/python-app"
+GITHUB_PAT="<PAT>"
+helm install "${INSTALLATION_NAME}" \
+    --namespace "${NAMESPACE}" \
+    --create-namespace \
+    --set githubConfigUrl="${GITHUB_CONFIG_URL}" \
+    --set githubConfigSecret.github_token="${GITHUB_PAT}" \
+    oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
+```
+- See selh-hosted runners at:
+  - https://github.com/jrbarrio/python-app/actions/runners?tab=self-hosted
+- Create Gitbub Actions CD job on a new workflow executing the following actions:
+  - Install Python
+  - Modify values file
+  - Install ArgoCD
+  - Update app in ArgoCD
