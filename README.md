@@ -149,7 +149,7 @@ helm install arc \
 
 INSTALLATION_NAME="arc-runner-set"
 NAMESPACE="arc-runners"
-GITHUB_CONFIG_URL="https://https://github.com/jrbarrio/python-app"
+GITHUB_CONFIG_URL="https://github.com/jrbarrio/python-app"
 GITHUB_PAT="<PAT>"
 helm install "${INSTALLATION_NAME}" \
     --namespace "${NAMESPACE}" \
