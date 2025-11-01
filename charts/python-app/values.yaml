@@ -2,7 +2,7 @@ replicaCount: 1
 image:
   repository: jrbarrio/python-app
   pullPolicy: IfNotPresent
-  tag: '0031c9'
+  tag: '2109b9'
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
