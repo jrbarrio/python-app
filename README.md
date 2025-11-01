@@ -1,11 +1,12 @@
 # Develop Python app
-Create a fresh Python environment:
+- Create a fresh Python environment:
 ```
 pyenv virtualenv 3.10.18 backstage-python-app
 echo "backstage-python-app" > .python-version
 pip install -r requirements.txt
 ````
-Run the app locally:
+- Develop simple Flask app
+- Run the app locally:
 ```
 python src/app.py
 ````
@@ -44,12 +45,23 @@ docker push jrbarrio/python-app:latest
 ```
 kind create cluster
 ```
-- Install kubernetes dashboard:
-  - https://howtodevez.medium.com/setting-up-kubernetes-dashboard-with-kind-ccd22fdd03e8
-  - https://medium.com/@muthanagavamsi/setting-kubernetes-dashboard-on-latest-kubernetes-1-32-using-kind-1e9681550a4a
-  - https://medium.com/@aman07mishra/how-to-add-cert-manager-to-your-kubernetes-cluster-574b4837f71d
 - Install kubectl:
   - https://v1-32.docs.kubernetes.io/docs/tasks/tools/install-kubectl-linux/
+- Install kubernetes dashboard:
+  - https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/
+```
+helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
+
+helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard
+
+kubectl apply -f k8s/service-account.yaml
+
+kubectl -n kube-system create token admin_user
+
+kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
+```
+- Kubernetes dashboard can be accessed at:
+  - https://localhost:8443/
 - Configure Ingress controller:
   - https://kind.sigs.k8s.io/docs/user/ingress/
 ```
@@ -158,7 +170,7 @@ helm install "${INSTALLATION_NAME}" \
     --set githubConfigSecret.github_token="${GITHUB_PAT}" \
     oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
 ```
-- See selh-hosted runners at:
+- See self-hosted runners at:
   - https://github.com/jrbarrio/python-app/actions/runners?tab=self-hosted
 - Create Gitbub Actions CD job on a new workflow executing the following actions:
   - Install Python
