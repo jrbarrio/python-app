@@ -41,29 +41,7 @@ docker push jrbarrio/python-app:latest
 # Deploy the app to Kubernetes
 - Install Kind:
   - https://kind.sigs.k8s.io/docs/user/quick-start/#installing-from-release-binaries
-- Create a cluster:
-```
-kind create cluster
-```
-- Install kubectl:
-  - https://v1-32.docs.kubernetes.io/docs/tasks/tools/install-kubectl-linux/
-- Install kubernetes dashboard:
-  - https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/
-```
-helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
-
-helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard
-
-kubectl apply -f k8s/service-account.yaml
-
-kubectl -n kube-system create token admin_user
-
-kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
-```
-- Kubernetes dashboard can be accessed at:
-  - https://localhost:8443/
-- Configure Ingress controller:
-  - https://kind.sigs.k8s.io/docs/user/ingress/
+- Create a cluster (prepared for Ingress):
 ```
 cat <<EOF | kind create cluster --config=-
 kind: Cluster
@@ -78,21 +56,48 @@ nodes:
     hostPort: 443
     protocol: TCP
 EOF
-
+```
+- Install kubectl:
+  - https://v1-32.docs.kubernetes.io/docs/tasks/tools/install-kubectl-linux/
+- Configure Ingress controller:
+  - https://kind.sigs.k8s.io/docs/user/ingress/
+```
 kubectl apply -f https://kind.sigs.k8s.io/examples/ingress/deploy-ingress-nginx.yaml
 
 kubectl get pods -n ingress-nginx
 ```
 - Deploy the app on kubernetes:
 ```
-kubectl apply -f k8s/deploy.yaml
-kubectl apply -f k8s/service.yaml
-kubectl apply -f k8s/ingress.yaml
+kubectl apply -f k8s/app/deploy.yaml
+kubectl apply -f k8s/app/service.yaml
+kubectl apply -f k8s/app/ingress.yaml
 ```
 - Modify `\etc\hosts` file:
 ```
 127.0.0.1   python-app.test.com
 ```
+
+# Install Kubernetes dashboard
+- Modify `\etc\hosts` file:
+```
+127.0.0.1   dashboard.test.com
+```
+- Install kubernetes dashboard:
+  - https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/
+```
+helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
+
+helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard
+
+kubectl apply -f k8s/dashboard/service-account.yaml
+kubectl apply -f k8s/dashboard/ingress.yaml
+
+kubectl -n kube-system create token admin_user
+
+## kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443 ---> https://localhost:8443
+```
+- Kubernetes dashboard can be accessed at:
+  - https://dashboard.test.com/
 
 # Use Helm to deploy the application
 - Install Helm:
@@ -103,9 +108,9 @@ helm create python-app
 ```
 - Delete previously installed service:
 ```
-kubectl delete -f k8s/deploy.yaml
-kubectl delete -f k8s/service.yaml
-kubectl delete -f k8s/ingress.yaml
+kubectl delete -f k8s/app/deploy.yaml
+kubectl delete -f k8s/app/service.yaml
+kubectl delete -f k8s/app/ingress.yaml
 ```
 - Install the chart:
 ```
@@ -175,5 +180,5 @@ helm install "${INSTALLATION_NAME}" \
 - Create Gitbub Actions CD job on a new workflow executing the following actions:
   - Install Python
   - Modify values file
-  - Install ArgoCD
-  - Update app in ArgoCD
+  - Install ArgoCD CLI
+  - Update app in ArgoCD using CLI
