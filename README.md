@@ -182,3 +182,51 @@ helm install "${INSTALLATION_NAME}" \
   - Modify values file
   - Install ArgoCD CLI
   - Update app in ArgoCD using CLI
+
+# Install Backstage
+- Follow instructions at:
+  - https://backstage.io/docs/getting-started/
+- Get Node Docker image:
+```
+docker pull node:20-bookworm-slim
+```
+- Run Node in a Docker container:
+```
+docker run --rm -p 3000:3000 -ti -p 7007:7007 -v /home/jorge/Projects/Udemy/PlatformEngineering/python-app/backstage:/app -w /app node:20-bookworm-slim bash
+```
+- Create Backstage app in the container:
+```
+npx @backstage/create-app@latest
+```
+- Execute:
+```
+cd backstage && yarn start
+```
+- Configure frontend host on `app-config.yaml`:
+```
+app:
+  title: Scaffolded Backstage App
+  baseUrl: http://localhost:3000
+  listen:
+    host: 0.0.0.0
+```
+- Create OAuth application in Github:
+  - https://github.com/settings/developers
+- Configure Backstage authentication with Github Authentication Provider on `app-config.local.yaml`:
+  - https://backstage.io/docs/auth/github/provider
+- Export required environment variables to Docker container:
+```
+docker run --rm -e AUTH_GITHUB_CLIENT_ID={AUTH_GITHUB_CLIENT_ID} -e AUTH_GITHUB_CLIENT_SECRET={AUTH_GITHUB_CLIENT_SECRET} -p 3000:3000 -ti -p 7007:7007 -v /home/jorge/Projects/Udemy/PlatformEngineering/python-app/backstage:/app -w /app node:20-bookworm-slim bash
+```
+- Install the provider package:
+```
+yarn --cwd packages/backend add @backstage/plugin-auth-backend-module-github-provider
+```
+- Add to `index.ts`:
+```
+backend.add(import('@backstage/plugin-auth-backend'));
+backend.add(import('@backstage/plugin-auth-backend-module-github-provider'));
+```
+- Do required changes on frontend:
+  - https://backstage.io/docs/auth/#sign-in-configuration
+- Create user catalog in `catalog\entities\users.yaml`.
