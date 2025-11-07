@@ -230,3 +230,8 @@ backend.add(import('@backstage/plugin-auth-backend-module-github-provider'));
 - Do required changes on frontend:
   - https://backstage.io/docs/auth/#sign-in-configuration
 - Create user catalog in `catalog\entities\users.yaml`.
+
+# Backstage Software Catalog
+- Create `catalog-info.yaml` file in `python-app`.
+- Register new component and use Github URL:
+  - https://github.com/jrbarrio/python-app/blob/main/catalog-info.yaml
