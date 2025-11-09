@@ -266,4 +266,15 @@ pip3 install mkdocs-techdocs-core
   - Configuration must be in the `mkdocs.yaml` file.
 - Documentation available at:
   - http://localhost:3000/docs/default/Component/python-app
- 
+
+# Backstage Software Templates
+- Documentation:
+  - https://backstage.io/docs/features/software-templates/
+  - https://backstage.io/docs/features/software-templates/writing-templates
+- Install Publish Github action:
+  - https://backstage.io/docs/features/software-templates/builtin-actions#installing-action-modules
+- In `app-config.local.yaml` create an integrations section with a Github Token.
+docker run --rm -e AUTH_GITHUB_CLIENT_ID={AUTH_GITHUB_CLIENT_ID} -e AUTH_GITHUB_CLIENT_SECRET={AUTH_GITHUB_CLIENT_SECRET} -e GITHUB_TOKEN={GITHUB_TOKEN} -p 3000:3000 -ti -p 7007:7007 -v /home/jorge/Projects/Udemy/PlatformEngineering/python-app/backstage:/app -w /app node:20-bookworm-slim bash
+```
+- Create a new Github repo for Backstage software templates:
+ - https://github.com/jrbarrio/backstage-software-templates
