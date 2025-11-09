@@ -235,3 +235,35 @@ backend.add(import('@backstage/plugin-auth-backend-module-github-provider'));
 - Create `catalog-info.yaml` file in `python-app`.
 - Register new component and use Github URL:
   - https://github.com/jrbarrio/python-app/blob/main/catalog-info.yaml
+
+# Backstage Tech Docs
+- Install MkDocs in Backstage.
+  - https://backstage.io/docs/features/techdocs/getting-started/
+- Configure MkDocs to run in local at `app-config.local.yaml`:
+```
+techdocs:
+  builder: 'local'
+  publisher:
+    type: 'local'
+  generator:
+    runIn: local
+```
+- Install MkDocs in Backstage app container:
+```
+apt-get update && \
+  apt-get install -y python3 python3-pip python3-venv && \
+  rm -rf /var/lib/apt/lists/*
+
+VIRTUAL_ENV=/opt/venv
+python3 -m venv $VIRTUAL_ENV
+PATH="$VIRTUAL_ENV/bin:$PATH"
+
+pip3 install mkdocs-techdocs-core
+```
+- Create application documentation in Markdown. Start on `docs\index.md`.
+- Render the documentation as HTML using MkDocs:
+  - https://example-mkdocs-basic.readthedocs.io/en/latest/
+  - Configuration must be in the `mkdocs.yaml` file.
+- Documentation available at:
+  - http://localhost:3000/docs/default/Component/python-app
+ 

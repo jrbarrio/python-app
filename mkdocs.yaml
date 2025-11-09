@@ -1,6 +1,6 @@
-site_name: 'python-app'
-site_description: 'Main documentation for the python-app'
-repo_url: https://github.com/ricardoandre97/python-app
+site_name: "python-app"
+site_description: "Main documentation for the python-app"
+repo_url: https://github.com/jrbarrio/python-app
 edit_uri: edit/main/docs
 
 plugins:
@@ -9,4 +9,4 @@ plugins:
 # For sidebar navigation on https://backstage.io/, see `microsite/sidebars.json`
 nav:
   - Overview:
-      - Getting started: 'docs/index.md'
+      - Getting started: "docs/index.md"
