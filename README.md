@@ -293,3 +293,19 @@ catalog:
 ```
 docker run --rm -e AUTH_GITHUB_CLIENT_ID={AUTH_GITHUB_CLIENT_ID} -e AUTH_GITHUB_CLIENT_SECRET={AUTH_GITHUB_CLIENT_SECRET} -e GITHUB_TOKEN={GITHUB_TOKEN} -e NODE_OPTIONS="${NODE_OPTIONS:-} --no-node-snapshot" -p 3000:3000 -ti -p 7007:7007 -v /home/jorge/Projects/Udemy/PlatformEngineering/python-app/backstage:/app -w /app node:20-bookworm-slim bash
 ```
+# Github Organizations
+- Create a Github Organization in your personal account:
+  - https://github.com/jorgeroldanbarrio
+- Copy the previously used Action secrets into the organization configuration:
+  - https://github.com/organizations/jorgeroldanbarrio/settings/secrets/actions
+- Configure the Backstage template to create the app in the Github Organization:
+```
+    - id: publish
+      name: Publish
+      action: publish:github
+      input:
+        description: This is ${{ parameters.component_id }}
+        repoUrl: github.com?owner=jorgeroldanbarrio&repo=${{parameters.component_id}}
+        protectDefaultBranch: false
+        repoVisibility: public
+```
