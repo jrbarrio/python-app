@@ -274,7 +274,22 @@ pip3 install mkdocs-techdocs-core
 - Install Publish Github action:
   - https://backstage.io/docs/features/software-templates/builtin-actions#installing-action-modules
 - In `app-config.local.yaml` create an integrations section with a Github Token.
+```
 docker run --rm -e AUTH_GITHUB_CLIENT_ID={AUTH_GITHUB_CLIENT_ID} -e AUTH_GITHUB_CLIENT_SECRET={AUTH_GITHUB_CLIENT_SECRET} -e GITHUB_TOKEN={GITHUB_TOKEN} -p 3000:3000 -ti -p 7007:7007 -v /home/jorge/Projects/Udemy/PlatformEngineering/python-app/backstage:/app -w /app node:20-bookworm-slim bash
 ```
 - Create a new Github repo for Backstage software templates:
- - https://github.com/jrbarrio/backstage-software-templates
+  - https://github.com/jrbarrio/backstage-software-templates
+- Add a new rule in `app-config.local.yaml`:
+```
+catalog:
+  rules:
+    - ...
+    - type: url
+      target: https://github.com/jrbarrio/backstage-software-templates/blob/main/python-app/template.yaml
+      rules:
+        - allow: [Template]
+```
+- If you're running Backstage with Node 20 or later, you'll need to pass the flag --no-node-snapshot to Node in order to use the templates feature:
+```
+docker run --rm -e AUTH_GITHUB_CLIENT_ID={AUTH_GITHUB_CLIENT_ID} -e AUTH_GITHUB_CLIENT_SECRET={AUTH_GITHUB_CLIENT_SECRET} -e GITHUB_TOKEN={GITHUB_TOKEN} -e NODE_OPTIONS="${NODE_OPTIONS:-} --no-node-snapshot" -p 3000:3000 -ti -p 7007:7007 -v /home/jorge/Projects/Udemy/PlatformEngineering/python-app/backstage:/app -w /app node:20-bookworm-slim bash
+```

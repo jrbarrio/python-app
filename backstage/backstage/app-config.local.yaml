@@ -1,0 +1,50 @@
+# Backstage override configuration for your local development environment
+app:
+  listen:
+    host: 0.0.0.0
+backend:
+  listen:
+    host: 0.0.0.0
+auth:
+  environment: development
+  providers:
+    github:
+      development:
+        clientId: ${AUTH_GITHUB_CLIENT_ID}
+        clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+        ## uncomment if using GitHub Enterprise
+        # enterpriseInstanceUrl: ${AUTH_GITHUB_ENTERPRISE_INSTANCE_URL}
+        ## uncomment to set lifespan of user session
+        # sessionDuration: { hours: 24 } # supports `ms` library format (e.g. '24h', '2 days'), ISO duration, "human duration" as used in code
+        signIn:
+          resolvers:
+            # See https://backstage.io/docs/auth/github/provider#resolvers for more resolvers
+            - resolver: usernameMatchingUserEntityName
+catalog:
+  rules:
+    - allow: [User, Group, Component, System, API, Resource, Location]
+  locations:
+    - type: file
+      target: /app/backstage/catalog/entities/users.yaml
+      rules:
+        - allow: [User]
+    - type: file
+      target: /app/backstage/catalog/entities/groups.yaml
+      rules:
+        - allow: [Group]
+    - type: url
+      target: https://github.com/jrbarrio/backstage-software-templates/blob/main/python-app/template.yaml
+      rules:
+        - allow: [Template]
+techdocs:
+  builder: "local"
+  publisher:
+    type: "local"
+  generator:
+    runIn: local
+integrations:
+  github:
+    - host: github.com
+      # This is a Personal Access Token or PAT from GitHub. You can find out how to generate this token, and more information
+      # about setting up the GitHub integration here: https://backstage.io/docs/integrations/github/locations#configuration
+      token: ${GITHUB_TOKEN}
