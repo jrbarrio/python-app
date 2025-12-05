@@ -92,9 +92,9 @@ helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dash
 kubectl apply -f k8s/dashboard/service-account.yaml
 kubectl apply -f k8s/dashboard/ingress.yaml
 
-kubectl -n kube-system create token admin_user
+kubectl -n kube-system create token admin-user
 
-## kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443 ---> https://localhost:8443
+## kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443 ---> (Chrome) https://localhost:8443
 ```
 - Kubernetes dashboard can be accessed at:
   - https://dashboard.test.com/
@@ -309,3 +309,18 @@ docker run --rm -e AUTH_GITHUB_CLIENT_ID={AUTH_GITHUB_CLIENT_ID} -e AUTH_GITHUB_
         protectDefaultBranch: false
         repoVisibility: public
 ```
+- Reconfigure existing Github Actions Runners to run on the organization's repo:
+```
+INSTALLATION_NAME="arc-runner-set"
+NAMESPACE="arc-runners"
+GITHUB_CONFIG_URL="https://github.com/jorgeroldanbarrio"
+GITHUB_PAT="<PAT>"
+helm upgrade "${INSTALLATION_NAME}" \
+    --namespace "${NAMESPACE}" \
+    --create-namespace \
+    --set githubConfigUrl="${GITHUB_CONFIG_URL}" \
+    --set githubConfigSecret.github_token="${GITHUB_PAT}" \
+    oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
+```
+- Watch the runner appear at https://github.com/organizations/jorgeroldanbarrio/settings/actions/runners.
+- Go to Actions General settings and set "Read and write permissions" on "Workflow permissions" section.
