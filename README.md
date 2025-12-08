@@ -324,3 +324,9 @@ helm upgrade "${INSTALLATION_NAME}" \
 ```
 - Watch the runner appear at https://github.com/organizations/jorgeroldanbarrio/settings/actions/runners.
 - Go to Actions General settings and set "Read and write permissions" on "Workflow permissions" section.
+
+# Build custome Backstage image
+
+```
+docker build -t backstage_custom .
+```
