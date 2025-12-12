@@ -330,3 +330,24 @@ helm upgrade "${INSTALLATION_NAME}" \
 ```
 docker build -t backstage_custom .
 ```
+
+# Create PostgreSQL database for Backstage
+
+```
+docker network create backstage
+
+docker run -d \
+	--name psql \
+	-e POSTGRES_PASSWORD=backstage \
+	-e POSTGRES_DB=backstage \
+	-e POSTGRES_USER=backstage \
+	-e PGDATA=/var/lib/postgresql/data/pgdata \
+	-v /tmp/psql:/var/lib/postgresql/data/data \
+	--network backstage \
+	postgres:16
+```
+
+# Create Backstage production image
+
+- Update `app-config.production.yaml` file
+- Follow instructions at https://backstage.io/docs/deployment/docker/#host-build
