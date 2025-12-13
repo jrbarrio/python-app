@@ -21,7 +21,7 @@ auth:
   environment: production
   providers:
     github:
-      development:
+      production:
         clientId: ${AUTH_GITHUB_CLIENT_ID}
         clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
         signIn:
@@ -33,11 +33,11 @@ catalog:
     - allow: [User, Group, Component, System, API, Resource, Location]
   locations:
     - type: file
-      target: /app/backstage/catalog/entities/users.yaml
+      target: /app/entities/users.yaml
       rules:
         - allow: [User]
     - type: file
-      target: /app/backstage/catalog/entities/groups.yaml
+      target: /app/entities/groups.yaml
       rules:
         - allow: [Group]
     - type: url

@@ -344,6 +344,7 @@ docker run -d \
 	-e PGDATA=/var/lib/postgresql/data/pgdata \
 	-v /tmp/psql:/var/lib/postgresql/data/data \
 	--network backstage \
+	-p 5432:5432 \
 	postgres:16
 ```
 
@@ -351,3 +352,12 @@ docker run -d \
 
 - Update `app-config.production.yaml` file
 - Follow instructions at https://backstage.io/docs/deployment/docker/#host-build
+- Create new `Dockerfile` under `backstage` folder
+- Build the Docker image:
+```
+docker build -t backstage_production .
+```
+- Recreate the Backstage container:
+```
+docker run --name backstage --network backstage -d -e AUTH_GITHUB_CLIENT_ID={AUTH_GITHUB_CLIENT_ID} -e AUTH_GITHUB_CLIENT_SECRET={AUTH_GITHUB_CLIENT_SECRET} -e GITHUB_TOKEN={GITHUB_TOKEN} -e NODE_OPTIONS="${NODE_OPTIONS:-} --no-node-snapshot" -p 3000:3000 -p 7007:7007 backstage_production
+```
