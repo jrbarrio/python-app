@@ -12,10 +12,10 @@ backend:
   database:
     client: pg
     connection:
-      host: psql
+      host: ${POSTGRES_HOST}
       port: 5432
-      user: backstage
-      password: backstage
+      user: ${POSTGRES_USER}
+      password: ${POSTGRES_PASSWORD}
 
 auth:
   environment: production

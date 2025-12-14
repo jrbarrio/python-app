@@ -1,2 +1,4 @@
 .idea/
 .env
+
+charts/backstage/backstage-k8s.yaml

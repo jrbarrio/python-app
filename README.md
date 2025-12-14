@@ -361,3 +361,29 @@ docker build -t backstage_production .
 ```
 docker run --name backstage --network backstage -d -e AUTH_GITHUB_CLIENT_ID={AUTH_GITHUB_CLIENT_ID} -e AUTH_GITHUB_CLIENT_SECRET={AUTH_GITHUB_CLIENT_SECRET} -e GITHUB_TOKEN={GITHUB_TOKEN} -e NODE_OPTIONS="${NODE_OPTIONS:-} --no-node-snapshot" -p 3000:3000 -p 7007:7007 backstage_production
 ```
+
+# Deploy Postgres in Kubernetes
+- Create values file `values-postgres.yaml`.
+- Follow instructions at https://artifacthub.io/packages/helm/bitnami/postgresql
+```
+helm repo add bitnami https://charts.bitnami.com/bitnami
+
+helm install psql bitnami/postgresql --version 18.1.14 -n backstage --create-namespace -f values-postgres.yaml
+```
+
+# Deploy Backstage in Kubernetes
+- Create manifest at `backstage-k8s.yaml`
+- Publish Backstage image to Docker Hub:
+```
+docker build -t backstage:v1 .
+
+docker tag backstage:v1 jrbarrio/backstage:v1
+
+docker login
+
+docker push jrbarrio/backstage:v1
+```
+- Deploy backstage to the Kubernetes cluster:
+```
+kubectl apply -f backstage-k8s.yaml -n backstage
+```
